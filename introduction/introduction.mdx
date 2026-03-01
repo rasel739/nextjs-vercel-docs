@@ -1,0 +1,106 @@
+---
+title: "How to Build and Deploy a Next.js App with Vercel"
+sidebarTitle: "Introduction"
+description: "A comprehensive, step-by-step guide to creating, configuring, and deploying a Next.js application using Vercel — from zero to production."
+icon: "house"
+---
+
+## Welcome
+
+This guide walks you through the **complete workflow** of building a Next.js application and deploying it to production using **Vercel** — the platform built by the creators of Next.js.
+
+Whether you're a beginner or an experienced developer looking for a streamlined deployment workflow, this documentation covers everything you need to get your application live on the web.
+
+<img
+  src="/images/nextjs-vercel-overview.png"
+  alt="Next.js and Vercel Overview"
+  style={{ borderRadius: '12px', border: '1px solid #e5e7eb' }}
+/>
+
+---
+
+## What You'll Learn
+
+<CardGroup cols={2}>
+  <Card title="Create a Next.js App" icon="code" href="/creating-nextjs-app">
+    Set up a brand-new Next.js project with all the modern defaults — TypeScript, ESLint, Tailwind CSS, and the App Router.
+  </Card>
+  <Card title="Set Up GitHub" icon="github" href="/github-repository">
+    Initialize a Git repository, connect it to GitHub, and prepare your codebase for collaborative development and CI/CD.
+  </Card>
+  <Card title="Connect to Vercel" icon="link" href="/connecting-to-vercel">
+    Import your GitHub repository into Vercel, configure project settings, and enable automatic deployments on every push.
+  </Card>
+  <Card title="Environment Variables" icon="key" href="/environment-variables">
+    Securely manage secrets and configuration values across development, preview, and production environments.
+  </Card>
+</CardGroup>
+
+---
+
+## Prerequisites
+
+Before you begin, make sure you have the following:
+
+<Steps>
+  <Step title="Node.js (v18.18 or later)">
+    Download and install Node.js from [nodejs.org](https://nodejs.org). Verify your installation:
+    ```bash
+    node --version
+    # Should output v18.18.0 or later
+    ```
+  </Step>
+  <Step title="A GitHub Account">
+    Sign up for a free account at [github.com](https://github.com) if you don't already have one.
+  </Step>
+  <Step title="A Vercel Account">
+    Create a free Vercel account at [vercel.com](https://vercel.com). We recommend signing up with your GitHub account for seamless integration.
+  </Step>
+  <Step title="A Code Editor">
+    We recommend [Visual Studio Code](https://code.visualstudio.com/) with the following extensions:
+    - **ESLint** — for code linting
+    - **Prettier** — for code formatting
+    - **Tailwind CSS IntelliSense** — for Tailwind autocompletion
+  </Step>
+</Steps>
+
+---
+
+## Technology Stack
+
+| Technology | Purpose | Version |
+|-----------|---------|---------|
+| **Next.js** | React framework with SSR, SSG, and API routes | 15.x |
+| **React** | UI component library | 19.x |
+| **TypeScript** | Type-safe JavaScript | 5.x |
+| **Tailwind CSS** | Utility-first CSS framework | 4.x |
+| **Vercel** | Hosting and deployment platform | — |
+| **GitHub** | Version control and collaboration | — |
+
+---
+
+## Guide Structure
+
+This guide is organized into **five sequential chapters**. Follow them in order for the best experience:
+
+<Steps>
+  <Step title="Creating a Next.js Application">
+    Scaffold a new project using `create-next-app` and explore the project structure.
+  </Step>
+  <Step title="Setting Up a GitHub Repository">
+    Version-control your code and push it to a remote GitHub repository.
+  </Step>
+  <Step title="Connecting the Project to Vercel">
+    Link your GitHub repo to Vercel for automatic build and deployment.
+  </Step>
+  <Step title="Managing Environment Variables">
+    Configure secrets and environment-specific values for your app.
+  </Step>
+  <Step title="Deployment Steps">
+    Deploy to production, set up custom domains, and monitor your application.
+  </Step>
+</Steps>
+
+<Note>
+  Each chapter includes code snippets, terminal commands, and screenshots to help you follow along. You can complete this entire guide in **under 30 minutes**.
+</Note>

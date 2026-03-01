@@ -15,24 +15,15 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": [
-              "introduction"
-            ]
+            "pages": ["introduction/introduction"]
           },
           {
             "group": "Build Your App",
-            "pages": [
-              "creating-nextjs-app",
-              "github-repository"
-            ]
+            "pages": ["creating-nextjs-app", "github-repository"]
           },
           {
             "group": "Deploy to Production",
-            "pages": [
-              "connecting-to-vercel",
-              "environment-variables",
-              "deployment"
-            ]
+            "pages": ["connecting-to-vercel", "environment-variables", "deployment"]
           }
         ]
       }
