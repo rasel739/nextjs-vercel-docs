@@ -1,0 +1,256 @@
+---
+title: "Managing Environment Variables"
+sidebarTitle: "Environment Variables"
+description: "Learn how to securely manage environment variables in your Next.js application across local development, preview, and production environments on Vercel."
+icon: "key"
+---
+
+## Overview
+
+Environment variables allow you to store **configuration values** and **secrets** (like API keys, database URLs, and authentication tokens) outside of your source code. This is essential for:
+
+- **Security** — Keep secrets out of your Git repository
+- **Flexibility** — Use different values for development, staging, and production
+- **Portability** — Configure the same app for different environments without code changes
+
+---
+
+## How Environment Variables Work in Next.js
+
+Next.js has built-in support for environment variables through `.env` files. Here's the loading priority:
+
+```mermaid
+graph TD
+    A[".env.local"] -->|Highest Priority| D[Application]
+    B[".env.development / .env.production"] -->|Medium Priority| D
+    C[".env"] -->|Lowest Priority| D
+```
+
+| File | Purpose | Git Status |
+|------|---------|------------|
+| `.env` | Default values for all environments | ✅ Committed |
+| `.env.local` | Local overrides with secrets | ❌ Ignored |
+| `.env.development` | Development-specific values | ✅ Committed |
+| `.env.production` | Production-specific values | ✅ Committed |
+| `.env.development.local` | Local dev overrides | ❌ Ignored |
+| `.env.production.local` | Local prod overrides | ❌ Ignored |
+
+<Warning>
+  **Never commit secrets to Git.** Files ending in `.local` are automatically excluded by the `.gitignore` that ships with `create-next-app`. Store API keys, database passwords, and tokens only in `.env.local` or in the Vercel dashboard.
+</Warning>
+
+---
+
+## Step 1: Create Local Environment Variables
+
+Create a `.env.local` file in your project root:
+
+```bash
+touch .env.local
+```
+
+Add your environment variables:
+
+```env
+# .env.local
+
+# Server-side only (not exposed to the browser)
+DATABASE_URL=postgresql://user:password@localhost:5432/mydb
+API_SECRET_KEY=sk_live_abc123def456
+
+# Client-side (exposed to the browser)
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+```
+
+---
+
+## Step 2: Understand the `NEXT_PUBLIC_` Prefix
+
+Next.js uses a naming convention to control which variables are accessible in the browser:
+
+<CardGroup cols={2}>
+  <Card title="Server-Only Variables" icon="lock">
+    Variables **without** the `NEXT_PUBLIC_` prefix are only available on the server side (API routes, server components, middleware).
+    ```env
+    DATABASE_URL=postgresql://...
+    API_SECRET_KEY=sk_live_...
+    ```
+  </Card>
+  <Card title="Client-Side Variables" icon="globe">
+    Variables **with** the `NEXT_PUBLIC_` prefix are bundled into the client-side JavaScript and accessible in the browser.
+    ```env
+    NEXT_PUBLIC_APP_URL=https://...
+    NEXT_PUBLIC_GA_ID=G-XXXXX
+    ```
+  </Card>
+</CardGroup>
+
+<Warning>
+  **Security Rule:** Never prefix a secret with `NEXT_PUBLIC_`. This exposes it to anyone viewing your site's JavaScript source code. Only use `NEXT_PUBLIC_` for non-sensitive values like public API URLs or analytics IDs.
+</Warning>
+
+---
+
+## Step 3: Use Environment Variables in Your Code
+
+### In Server Components & API Routes
+
+```tsx
+// src/app/api/data/route.ts
+export async function GET() {
+  // Server-only variable — safe for secrets
+  const dbUrl = process.env.DATABASE_URL;
+
+  return Response.json({
+    message: "Connected to database",
+    // Never return secrets in API responses!
+  });
+}
+```
+
+### In Client Components
+
+```tsx
+// src/components/Footer.tsx
+"use client";
+
+export function Footer() {
+  // Client-side variable — must use NEXT_PUBLIC_ prefix
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+  return (
+    <footer className="p-4 text-center text-gray-500">
+      <a href={appUrl}>Visit our site</a>
+    </footer>
+  );
+}
+```
+
+### In Next.js Configuration
+
+```ts
+// next.config.ts
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  env: {
+    CUSTOM_VAR: process.env.CUSTOM_VAR,
+  },
+  images: {
+    domains: [process.env.IMAGE_DOMAIN || "example.com"],
+  },
+};
+
+export default nextConfig;
+```
+
+---
+
+## Step 4: Add Environment Variables in Vercel
+
+For your deployed application, environment variables are managed through the **Vercel Dashboard**.
+
+<Steps>
+  <Step title="Navigate to Project Settings">
+    Go to your project on the Vercel dashboard, then click **Settings** → **Environment Variables**.
+  </Step>
+  <Step title="Add Variables">
+    For each variable, specify:
+    - **Key** — The variable name (e.g., `DATABASE_URL`)
+    - **Value** — The variable value (e.g., `postgresql://...`)
+    - **Environments** — Select which environments the variable applies to:
+      - ✅ **Production**
+      - ✅ **Preview**
+      - ✅ **Development**
+  </Step>
+  <Step title="Save and Redeploy">
+    Click **Save**. New environment variables take effect on the **next deployment**. To apply them immediately, trigger a redeployment from the Deployments tab.
+  </Step>
+</Steps>
+
+<img
+  src="/images/vercel-env-variables.png"
+  alt="Adding environment variables in the Vercel dashboard"
+  style={{ borderRadius: '12px', border: '1px solid #e5e7eb' }}
+/>
+
+---
+
+## Step 5: Environment-Specific Configuration
+
+Vercel allows you to set **different values** for each environment:
+
+| Environment | Use Case | Example API URL |
+|-------------|----------|-----------------|
+| **Production** | Live users | `https://api.myapp.com` |
+| **Preview** | PR review / staging | `https://staging-api.myapp.com` |
+| **Development** | Local dev (via Vercel CLI) | `http://localhost:3000/api` |
+
+### Using the Vercel CLI for Local Development
+
+You can pull your Vercel environment variables to your local machine using the Vercel CLI:
+
+```bash
+# Install the Vercel CLI
+npm i -g vercel
+
+# Link your local project to Vercel
+vercel link
+
+# Pull environment variables to .env.local
+vercel env pull .env.local
+```
+
+<Tip>
+  This is useful when you want to use the same environment variables locally as in your Vercel preview or production environments, without manually copying values.
+</Tip>
+
+---
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use a .env.example file" icon="file">
+    Create a `.env.example` file that lists all required variables **without values**. This serves as documentation for other developers:
+    ```env
+    # .env.example
+    DATABASE_URL=
+    API_SECRET_KEY=
+    NEXT_PUBLIC_APP_URL=
+    NEXT_PUBLIC_API_URL=
+    ```
+    Commit this file to Git so team members know which variables to configure.
+  </Accordion>
+  <Accordion title="Validate environment variables at build time" icon="check">
+    Use a validation library like `zod` to ensure all required variables are set:
+    ```ts
+    // src/lib/env.ts
+    import { z } from "zod";
+
+    const envSchema = z.object({
+      DATABASE_URL: z.string().url(),
+      API_SECRET_KEY: z.string().min(1),
+      NEXT_PUBLIC_APP_URL: z.string().url(),
+    });
+
+    export const env = envSchema.parse(process.env);
+    ```
+  </Accordion>
+  <Accordion title="Rotate secrets regularly" icon="rotate">
+    Periodically update sensitive values like API keys and database passwords. Update them in the Vercel dashboard and redeploy.
+  </Accordion>
+  <Accordion title="Use Vercel's Sensitive Variable feature" icon="eye-slash">
+    In the Vercel dashboard, mark variables as **Sensitive** to prevent them from being read after they are set. This adds an extra layer of security for critical secrets.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Summary
+
+<Check>
+  You now know how to manage environment variables in both your local development environment and on Vercel. Your secrets are secure, and your application is configurable across all environments.
+</Check>
+
+**Next up:** [Deployment Steps](/deployment) to learn about production deployments, custom domains, and monitoring.
