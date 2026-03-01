@@ -2,6 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Next.js + Vercel Deployment Guide",
+  "description": "A complete production-ready guide to building and deploying Next.js applications with Vercel.",
   "colors": {
     "primary": "#0070F3",
     "light": "#3291FF",
@@ -15,7 +16,7 @@
         "groups": [
           {
             "group": "Getting Started",
-            "pages": ["introduction/introduction"]
+            "pages": ["introduction/overview"]
           },
           {
             "group": "Build Your App",
@@ -23,7 +24,11 @@
           },
           {
             "group": "Deploy to Production",
-            "pages": ["connecting-to-vercel", "environment-variables", "deployment"]
+            "pages": [
+              "deployment/connecting-to-vercel",
+              "deployment/environment-variables",
+              "deployment/deployment-steps"
+            ]
           }
         ]
       }
