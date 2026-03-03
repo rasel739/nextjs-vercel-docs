@@ -15,12 +15,22 @@ A comprehensive documentation site built with [Mintlify](https://mintlify.com/) 
 
 ### Local Development
 
+# Git Repo Clone
+
 ```bash
+git clone https://github.com/rasel739/nextjs-vercel-docs.git
+```
+
 # Install dependencies
-npm install
+
+```bash
+pnpm install
+```
 
 # Start the Mintlify development server
-npm run dev
+
+```bash
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the documentation locally.
