@@ -2,7 +2,6 @@
   "name": "nextjs-vercel-docs",
   "version": "1.0.0",
   "description": "Documentation site for How to Build and Deploy a Next.js App with Vercel",
-  "main": "index.js",
   "scripts": {
     "dev": "mintlify dev",
     "test": "echo \"Error: no test specified\" && exit 1"
